@@ -63,7 +63,7 @@ async function participantFor(request, env) {
   const id = sessionId(request);
   if (!id) return null;
   return env.DB.prepare(
-    "SELECT id, name, team_name, grade, school_name, round2_unlocked, case_solved, total_score FROM participants WHERE id = ?",
+    "SELECT id, name, team_name, grade, school_name, round2_unlocked, case_solved, total_score, round1_completed_at, round1_duration_seconds, round2_started_at, case_solved_at, round2_duration_seconds FROM participants WHERE id = ?",
   ).bind(id).first();
 }
 
@@ -149,6 +149,11 @@ async function getState(request, env) {
     totalScore: result.participant.total_score,
     round2Unlocked: Boolean(result.participant.round2_unlocked),
     caseSolved: Boolean(result.participant.case_solved),
+    round1CompletedAt: result.participant.round1_completed_at,
+    round1DurationSeconds: result.participant.round1_duration_seconds,
+    round2StartedAt: result.participant.round2_started_at,
+    caseSolvedAt: result.participant.case_solved_at,
+    round2DurationSeconds: result.participant.round2_duration_seconds,
   });
 }
 
@@ -245,10 +250,25 @@ async function unlockRound2(request, env) {
 
   if (correct) {
     await env.DB.prepare(
-      "UPDATE participants SET round2_unlocked = 1 WHERE id = ?",
+      `UPDATE participants
+       SET round2_unlocked = 1,
+           round1_completed_at = COALESCE(round1_completed_at, strftime('%Y-%m-%dT%H:%M:%fZ', 'now')),
+           round1_duration_seconds = COALESCE(
+             round1_duration_seconds,
+             MAX(0, CAST((julianday(strftime('%Y-%m-%dT%H:%M:%fZ', 'now')) - julianday(created_at)) * 86400 AS INTEGER))
+           ),
+           round2_started_at = COALESCE(round2_started_at, strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))
+       WHERE id = ?`,
     ).bind(result.participant.id).run();
   }
-  return json({ correct, error: correct ? undefined : "The key is incorrect or not all puzzles are solved yet." });
+  const participant = await env.DB.prepare(
+    "SELECT round1_duration_seconds FROM participants WHERE id = ?",
+  ).bind(result.participant.id).first();
+  return json({
+    correct,
+    round1DurationSeconds: participant.round1_duration_seconds,
+    error: correct ? undefined : "The key is incorrect or not all puzzles are solved yet.",
+  });
 }
 
 async function submitIndictment(request, env) {
@@ -275,11 +295,24 @@ async function submitIndictment(request, env) {
 
   if (correct) {
     await env.DB.prepare(
-      "UPDATE participants SET case_solved = 1 WHERE id = ?",
+      `UPDATE participants
+       SET case_solved = 1,
+           case_solved_at = COALESCE(case_solved_at, strftime('%Y-%m-%dT%H:%M:%fZ', 'now')),
+           round2_duration_seconds = COALESCE(
+             round2_duration_seconds,
+             MAX(0, CAST((julianday(strftime('%Y-%m-%dT%H:%M:%fZ', 'now')) - julianday(round2_started_at)) * 86400 AS INTEGER))
+           )
+       WHERE id = ?`,
     ).bind(result.participant.id).run();
   }
 
-  return json({ correct });
+  const participant = await env.DB.prepare(
+    "SELECT round2_duration_seconds FROM participants WHERE id = ?",
+  ).bind(result.participant.id).first();
+  return json({
+    correct,
+    round2DurationSeconds: participant.round2_duration_seconds,
+  });
 }
 
 export async function onRequest({ request, env }) {

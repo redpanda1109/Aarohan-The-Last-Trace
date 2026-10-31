@@ -460,6 +460,8 @@ const STATE = {
   totalScore: 0,
   round2Unlocked: false,
   caseSolved: false,
+  round1DurationSeconds: null,
+  round2DurationSeconds: null,
   participant: null,
   registrationChecked: false,
   activeFilter: 'all',
@@ -584,6 +586,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     STATE.totalScore = data.totalScore;
     STATE.round2Unlocked = data.round2Unlocked;
     STATE.caseSolved = data.caseSolved;
+    STATE.round1DurationSeconds = data.round1DurationSeconds;
+    STATE.round2DurationSeconds = data.round2DurationSeconds;
   } catch (error) {
     if (!error.message.startsWith('Register before continuing.')) {
       console.error('Could not restore participant session:', error);
@@ -595,6 +599,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   renderRegistrationProfile();
   renderPuzzles();
   renderCodeword();
+  updateRoundTimingDisplay();
   updateProgressDisplay();
   initPages();
 });
@@ -733,11 +738,14 @@ function initRegistrationForm() {
       STATE.solvedPuzzles.clear();
       STATE.round2Unlocked = false;
       STATE.caseSolved = false;
+      STATE.round1DurationSeconds = null;
+      STATE.round2DurationSeconds = null;
       STATE.revealedHints = {};
       STATE.registrationChecked = true;
       renderRegistrationProfile();
       renderPuzzles();
       renderCodeword();
+      updateRoundTimingDisplay();
       updateProgressDisplay();
       showRegistrationMessage('Registration saved.', false);
       showPage('home');
@@ -1201,6 +1209,36 @@ function updateHintUsageDisplay() {
   if (counter) counter.textContent = `HINTS USED: ${Object.keys(STATE.revealedHints).length} / 15`;
 }
 
+function formatRoundDuration(totalSeconds) {
+  const seconds = Math.max(0, Math.floor(totalSeconds));
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const remainingSeconds = seconds % 60;
+  const parts = [];
+  if (hours) parts.push(`${hours}h`);
+  if (minutes || hours) parts.push(`${minutes}m`);
+  parts.push(`${remainingSeconds}s`);
+  return parts.join(' ');
+}
+
+function updateRoundTimingDisplay() {
+  const round1Summary = document.getElementById('round1-time-summary');
+  if (round1Summary) {
+    round1Summary.hidden = STATE.round1DurationSeconds === null;
+    if (STATE.round1DurationSeconds !== null) {
+      round1Summary.textContent = `ROUND 1 COMPLETED IN: ${formatRoundDuration(STATE.round1DurationSeconds)}`;
+    }
+  }
+
+  const round2Summary = document.getElementById('round2-time-summary');
+  if (round2Summary) {
+    round2Summary.hidden = STATE.round2DurationSeconds === null;
+    if (STATE.round2DurationSeconds !== null) {
+      round2Summary.textContent = `ROUND 2 COMPLETED IN: ${formatRoundDuration(STATE.round2DurationSeconds)}`;
+    }
+  }
+}
+
 function initUnlockButton() {
   const btn = document.getElementById('final-unlock-btn');
   const input = document.getElementById('final-code-input');
@@ -1219,8 +1257,10 @@ function initUnlockButton() {
       if (result.correct) {
         playSound('unlock');
         STATE.round2Unlocked = true;
+        STATE.round1DurationSeconds = result.round1DurationSeconds;
+        updateRoundTimingDisplay();
         feedback.className = 'unlock-feedback success';
-        feedback.textContent = '🔓 ACCESS GRANTED! Archive Room Unlocked. Transitioning to Round 2 Evidence Vault...';
+        feedback.textContent = `🔓 ACCESS GRANTED! Round 1 completed in ${formatRoundDuration(result.round1DurationSeconds)}. Opening the Round 2 Evidence Vault...`;
         setTimeout(() => showPage('evidence'), 1400);
       } else {
         playSound('error');
@@ -1307,6 +1347,8 @@ async function handleIndictmentSubmit(e) {
 
     if (result.correct) {
       STATE.caseSolved = true;
+      STATE.round2DurationSeconds = result.round2DurationSeconds;
+      updateRoundTimingDisplay();
       playSound('unlock');
       openCaseSolvedModal();
       feedback.className = 'indictment-feedback';
@@ -1326,6 +1368,7 @@ async function handleIndictmentSubmit(e) {
 window.handleIndictmentSubmit = handleIndictmentSubmit;
 
 function openCaseSolvedModal() {
+  updateRoundTimingDisplay();
   document.getElementById('case-solved-modal')?.classList.add('active');
   document.body.style.overflow = 'hidden';
 }

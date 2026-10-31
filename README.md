@@ -20,14 +20,28 @@ Until the account-ID variable and API-token secret are set, the GitHub deploy jo
 
 ## Participant records
 
-Each participant registers with a team name, grade/class, and school (name is not requested). The registration records the time they accepted the privacy notice. Puzzle attempts (including incorrect attempts), hint use, access-key attempts, and final indictment attempts are saved against a browser session. Each participant can use one hint per puzzle. A correct answer earns 100 points, and each used hint deducts 30 points, including when its puzzle is not yet solved. Round 1 displays each puzzle's hint status, penalty, and score, plus the total score. Progress follows the same browser; clearing its cookies or changing devices loses the session association. Existing registrations retain any name they supplied before the name field was removed; new registrations do not collect a name.
+Each participant registers with a team name, grade/class, and school (name is not requested). The registration records the time they accepted the privacy notice. Puzzle attempts (including incorrect attempts), hint use, access-key attempts, and final indictment attempts are saved against a browser session. Each participant can use one hint per puzzle. A correct answer earns 100 points, and each used hint deducts 30 points, including when its puzzle is not yet solved. Round 1 displays each puzzle's hint status, penalty, and score, plus the total score. Round 1 duration is measured from registration to access-key unlock; Round 2 duration is measured from unlock to the correct indictment. Both completion timestamps and durations in seconds are stored in D1 and displayed when each round is completed. Progress follows the same browser; clearing its cookies or changing devices loses the session association. Existing registrations retain any name they supplied before the name field was removed; new registrations do not collect a name.
 
 Only authorized event organizers with access to the Cloudflare account should view participant records. In the Cloudflare dashboard, open **Storage & databases → D1 → `aarohan-final` → Console** to review them:
 
 ```sql
 SELECT id, team_name, grade, school_name, created_at,
        privacy_accepted_at,
-       round2_unlocked, case_solved, total_score
+       round2_unlocked, case_solved, total_score,
+       round1_completed_at, round1_duration_seconds,
+       round2_started_at, case_solved_at, round2_duration_seconds
+FROM participants
+ORDER BY created_at DESC;
+```
+
+Round durations are stored in seconds, with UTC completion/start timestamps, in the `participants` table. Migration `0006_backfill_round_times.sql` fills prior completed-round durations from their successful unlock and indictment submission timestamps. To show durations in minutes:
+
+```sql
+SELECT team_name, round1_duration_seconds,
+       ROUND(round1_duration_seconds / 60.0, 2) AS round1_minutes,
+       round2_duration_seconds,
+       ROUND(round2_duration_seconds / 60.0, 2) AS round2_minutes,
+       round1_completed_at, round2_started_at, case_solved_at
 FROM participants
 ORDER BY created_at DESC;
 ```
