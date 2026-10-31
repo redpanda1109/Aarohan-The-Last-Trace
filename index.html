@@ -300,6 +300,7 @@
           <div>
             <h3 class="font-mono text-amber">ARCHIVE ACCESS KEY</h3>
             <p class="text-muted" style="font-size:0.85rem">Enter answers to the 15 puzzles below to assemble the access key</p>
+            <p class="text-muted hint-usage-counter" id="hint-usage-counter">HINTS USED: 0 / 15</p>
           </div>
           <div class="solve-progress-container">
             <span class="codeword-progress-badge" id="solve-counter">0 / 15 SOLVED</span>
@@ -328,7 +329,7 @@
 
       <!-- Puzzles Grid -->
       <div class="puzzles-grid" id="puzzles-grid">
-        <!-- Dynamically populated by JS with answer forms and card dynamics -->
+        <!-- Dynamically populated by JS with form inputs, hint toggles, and card dynamics -->
       </div>
     </section>
   </div>
@@ -408,10 +409,6 @@
 
       <form class="registration-form" id="registration-form">
         <div class="form-group">
-          <label for="registration-name">PARTICIPANT NAME</label>
-          <input class="form-input" id="registration-name" name="name" type="text" maxlength="100" autocomplete="name" required>
-        </div>
-        <div class="form-group">
           <label for="registration-team">TEAM NAME</label>
           <input class="form-input" id="registration-team" name="teamName" type="text" maxlength="100" required>
         </div>
@@ -425,7 +422,7 @@
         </div>
 
         <div class="registration-privacy">
-          <strong>Privacy notice:</strong> Your name, team, grade/class, school, and puzzle and case submissions are stored in the event's Cloudflare database for participation and scoring. Event organizers with database access can view them. This website does not ask for your email or password. If you are under your event's age of consent, get the permission required by your parent/guardian or school before registering. Ask the event organizers about correction or deletion of your record.
+          <strong>Privacy notice:</strong> Your team, grade/class, school, hint usage, and puzzle and case submissions are stored in the event's Cloudflare database for participation and scoring. Event organizers with database access can view them. This website does not ask for your name, email, or password. If you are under your event's age of consent, get the permission required by your parent/guardian or school before registering. Ask the event organizers about correction or deletion of your record.
         </div>
         <label class="registration-consent">
           <input id="registration-consent" name="privacyAccepted" type="checkbox" required>

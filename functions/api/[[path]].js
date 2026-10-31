@@ -92,7 +92,6 @@ async function register(request, env) {
   if (!body) return json({ error: "A valid JSON request is required." }, 400);
 
   const fields = {
-    name: body.name,
     team_name: body.teamName,
     grade: body.grade,
     school_name: body.schoolName,
@@ -108,8 +107,8 @@ async function register(request, env) {
 
   const id = crypto.randomUUID();
   await env.DB.prepare(
-    "INSERT INTO participants (id, name, team_name, grade, school_name, privacy_accepted_at) VALUES (?, ?, ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))",
-  ).bind(id, fields.name.trim(), fields.team_name.trim(), fields.grade.trim(), fields.school_name.trim()).run();
+    "INSERT INTO participants (id, name, team_name, grade, school_name, privacy_accepted_at) VALUES (?, '', ?, ?, ?, strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))",
+  ).bind(id, fields.team_name.trim(), fields.grade.trim(), fields.school_name.trim()).run();
 
   const participant = await participantFor(
     new Request(request.url, { headers: { Cookie: `${SESSION_COOKIE}=${id}` } }),
@@ -118,7 +117,6 @@ async function register(request, env) {
   return json({
     participant: {
       id: participant.id,
-      name: participant.name,
       teamName: participant.team_name,
       grade: participant.grade,
       schoolName: participant.school_name,
@@ -135,19 +133,41 @@ async function getState(request, env) {
   const solved = await env.DB.prepare(
     "SELECT puzzle_id FROM puzzle_progress WHERE participant_id = ? ORDER BY puzzle_id",
   ).bind(result.participant.id).all();
+  const hints = await env.DB.prepare(
+    "SELECT puzzle_id FROM hint_usage WHERE participant_id = ? ORDER BY puzzle_id",
+  ).bind(result.participant.id).all();
 
   return json({
     participant: {
       id: result.participant.id,
-      name: result.participant.name,
       teamName: result.participant.team_name,
       grade: result.participant.grade,
       schoolName: result.participant.school_name,
     },
     solvedPuzzleIds: solved.results.map((row) => row.puzzle_id),
+    hintUsedPuzzleIds: hints.results.map((row) => row.puzzle_id),
     round2Unlocked: Boolean(result.participant.round2_unlocked),
     caseSolved: Boolean(result.participant.case_solved),
   });
+}
+
+async function useHint(request, env) {
+  if (request.method !== "POST") return json({ error: "Method not allowed." }, 405, { Allow: "POST" });
+
+  const result = await requireParticipant(request, env);
+  if (result.response) return result.response;
+
+  const body = await parseBody(request);
+  const puzzleId = Number(body?.puzzleId);
+  if (!Number.isInteger(puzzleId) || puzzleId < 1 || puzzleId > 15) {
+    return json({ error: "Choose a valid puzzle." }, 400);
+  }
+
+  const insert = await env.DB.prepare(
+    "INSERT INTO hint_usage (participant_id, puzzle_id) VALUES (?, ?) ON CONFLICT (participant_id, puzzle_id) DO NOTHING",
+  ).bind(result.participant.id, puzzleId).run();
+
+  return json({ used: true, alreadyUsed: insert.meta.changes === 0 });
 }
 
 async function submitPuzzle(request, env) {
@@ -251,6 +271,7 @@ export async function onRequest({ request, env }) {
   const path = new URL(request.url).pathname;
   if (path === "/api/register") return register(request, env);
   if (path === "/api/state" && request.method === "GET") return getState(request, env);
+  if (path === "/api/hint") return useHint(request, env);
   if (path === "/api/puzzle-submit") return submitPuzzle(request, env);
   if (path === "/api/unlock") return unlockRound2(request, env);
   if (path === "/api/indictment") return submitIndictment(request, env);
