@@ -1786,55 +1786,6 @@ body::before {
   color: var(--red-400);
 }
 
-/* Progressive Hints */
-.puzzle-hints-section {
-  margin-top: 12px;
-  border-top: 1px dashed rgba(245, 158, 11, 0.15);
-  padding-top: 10px;
-}
-
-.btn-hint {
-  background: transparent;
-  border: 1px solid rgba(245, 158, 11, 0.25);
-  border-radius: var(--radius-sm);
-  color: var(--amber-400);
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  padding: 4px 10px;
-  cursor: pointer;
-  transition: all var(--transition-fast);
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.btn-hint:hover {
-  background: rgba(245, 158, 11, 0.1);
-  border-color: var(--amber-500);
-}
-
-.hint-box {
-  margin-top: 8px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.hint-item {
-  background: rgba(245, 158, 11, 0.05);
-  border-left: 2px solid var(--amber-500);
-  padding: 6px 10px;
-  font-size: 0.75rem;
-  color: var(--text-secondary);
-  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-  animation: fadeIn 0.3s ease;
-}
-
-.hint-item strong {
-  color: var(--amber-400);
-  font-family: var(--font-mono);
-}
-
 .puzzle-char-slot.revealed {
   background: rgba(245, 158, 11, 0.2);
   border-color: var(--amber-500);

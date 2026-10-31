@@ -13,136 +13,76 @@ const GAME_DATA = {
       id: 1, title: "The Shifted Transponder", difficulty: "easy", character: "T", estimated_minutes: 3,
       prompt: `A communication snippet intercepted from Dr. John's desktop was scrambled using a classic Caesar shift (+3 forward in the Latin alphabet).\nDecipher the scrambled text below to find the target word:\n\nScrambled: "WDUJHW"`,
       artifact: `// Intercepted Packet #01\nCIPHERTEXT: WDUJHW\nALGORITHM : CAESAR_SHIFT(K = +3)\nCHARSET   : A-Z (Uppercase)`,
-      hints: [
-        "Caesar cipher shifts each letter forward by 3. To decode, shift backwards by 3 (e.g., D -> A).",
-        "W - 3 = T; D - 3 = A; U - 3 = R; J - 3 = G; H - 3 = E; W - 3 = T."
-      ]
     },
     {
       id: 2, title: "Binary Telemetry Stream", difficulty: "easy", character: "H", estimated_minutes: 3,
       prompt: `Asterion's Level -1 environmental sensor logged this 8-bit binary ASCII byte immediately prior to the door lock failure. Convert the binary byte to its ASCII character representation:\n\nBinary: 01001000`,
       artifact: `// Environmental Monitor Log\nSENSOR_ID : ENV-B1-ARCHIVE\nTIMESTAMP : 21:49:12\nRAW_BITS  : 01001000\nFORMAT    : 8-BIT UNSIGNED ASCII`,
-      hints: [
-        "Break down powers of 2: 0*128 + 1*64 + 0*32 + 0*16 + 1*8 + 0*4 + 0*2 + 0*1 = 64 + 8 = 72 in decimal.",
-        "Decimal 72 corresponds to uppercase letter 'H' in the ASCII table (A=65, B=66, ... H=72)."
-      ]
     },
     {
       id: 3, title: "Pulse Wave Calibration", difficulty: "easy", character: "E", estimated_minutes: 3,
       prompt: `The telemetry sensor measures an optical calibration pulse with wavelength λ = 500 nm traveling through a specialized optical fibre with propagation speed v = 2.0 × 10⁸ m/s.\n\nCalculate the frequency of the pulse in TeraHertz (THz). Enter the numerical integer value.`,
       artifact: `WAVE_EQUATION : v = f * λ\nPROBING_SPEED : v = 2.0 × 10^8 m/s\nWAVELENGTH    : λ = 500 nm = 5.0 × 10^-7 m\nTARGET_UNIT   : THz (10^12 Hz)`,
-      hints: [
-        "Use f = v / λ. Substitute (2.0 × 10⁸) / (5.0 × 10⁻⁷).",
-        "(2.0 / 5.0) × 10¹⁵ = 0.4 × 10¹⁵ Hz = 400 × 10¹² Hz = 400 THz."
-      ]
     },
     {
       id: 4, title: "Archive Sequence Anomaly", difficulty: "easy", character: "L", estimated_minutes: 2,
       prompt: `The archive system auto-generates sequential backup partition identifiers:\n\n0x10, 0x18, 0x20, 0x28, 0x30, [ ? ]\n\nWhat is the next hex identifier in the sequence?`,
       artifact: `PARTITION_ID | OFFSET (HEX) | OFFSET (DEC)\nPART-01      | 0x10         | 16\nPART-02      | 0x18         | 24\nPART-03      | 0x20         | 32\nPART-04      | 0x28         | 40\nPART-05      | 0x30         | 48\nPART-06      | [ ? ]        | 56`,
-      hints: [
-        "Observe the decimal difference: 16, 24, 32, 40, 48... each step adds 8.",
-        "48 + 8 = 56 decimal. In hexadecimal, 56 = (3 × 16) + 8 = 0x38."
-      ]
     },
     {
       id: 5, title: "Telemetry Checksum Loop", difficulty: "easy", character: "A", estimated_minutes: 3,
       prompt: `A data processing routine in the LANTERN pipeline computes an accumulator value. Determine the final value printed:\n\nacc = 12\nfor k in range(1, 5):\n    if k % 2 == 0:\n        acc += k * 3\n    else:\n        acc -= k\nprint(acc)`,
       artifact: `# LANTERN Raw Validator Fragment\nacc = 12\nfor k in range(1, 5): # k = 1, 2, 3, 4\n    if k % 2 == 0:\n        acc += k * 3\n    else:\n        acc -= k\nprint(acc)`,
-      hints: [
-        "Trace each iteration: k=1 (odd: acc = 12 - 1 = 11); k=2 (even: acc = 11 + 6 = 17).",
-        "Continue: k=3 (odd: acc = 17 - 3 = 14); k=4 (even: acc = 14 + 12 = 26)."
-      ]
     },
     {
       id: 6, title: "Modular Authentication Key", difficulty: "medium", character: "S", estimated_minutes: 4,
       prompt: `The archive gateway enforces a modular verification check using public modulo n = 37.\nCalculate the value of:\nR = (7³ + 15) mod 37\n\nEnter the integer result.`,
       artifact: `GATEWAY_AUTH_PARAM : n = 37\nCHALLENGE_SEED     : a = 7, exp = 3, b = 15\nVERIFICATION_EQ    : R = (a^3 + b) mod n`,
-      hints: [
-        "Calculate 7³ = 343.",
-        "343 + 15 = 358. Now compute 358 mod 37: 37 × 9 = 333; 358 - 333 = 25."
-      ]
     },
     {
       id: 7, title: "Steganographic Header Leak", difficulty: "medium", character: "T", estimated_minutes: 4,
       prompt: `An emergency telemetry snapshot bitmap header had LSB embedded into the byte stream:\n\nBytes (hex): 0x46, 0x4C, 0x41, 0x47\nExtract the ASCII string decoded from these four hex bytes.`,
       artifact: `OFFSET    | 00 01 02 03 | ASCII\n00000000  | 46 4C 41 47 | FLAG`,
-      hints: [
-        "0x46 in ASCII is 'F', 0x4C is 'L'.",
-        "0x41 is 'A', 0x47 is 'G'. Combine them together."
-      ]
     },
     {
       id: 8, title: "Fictional OSINT Domain Audit", difficulty: "medium", character: "T", estimated_minutes: 4,
       prompt: `Investigating an outbound DNS query at 21:05, you find a reverse DNS PTR record:\n\n18.44.204.10.in-addr.arpa -> ops-relay.internal.asterion-clinical.org\n\nThe team needs the exact hostname prefix (first subdomain label before .internal).`,
       artifact: `DNS_QUERY_LOG #49102\nCLIENT_IP   : 10.204.44.18\nLOOKUP_TYPE : PTR\nRECORD_DATA : ops-relay.internal.asterion-clinical.org\nSTATUS      : NOERROR (TTL 300)`,
-      hints: [
-        "Look at the full domain: ops-relay.internal.asterion-clinical.org.",
-        "The first label (the hostname component before .internal) is 'ops-relay'."
-      ]
     },
     {
       id: 9, title: "Spectrometry Calibration Ratio", difficulty: "medium", character: "R", estimated_minutes: 4,
       prompt: `Lab toxicology screen: absorbance A = 0.84 at 280 nm.\nMolar extinction coefficient ε = 4200 L/(mol·cm), path length l = 1 cm.\n\nBeer-Lambert Law: A = ε · c · l\nCalculate concentration c in μmol/L. Enter the integer value.`,
       artifact: `BEER_LAMBERT_LAW : A = ε * c * l\nABSORBANCE (A)   : 0.84\nMOLAR_EXTINCTION : 4200 L/(mol*cm)\nPATH_LENGTH (l)  : 1.0 cm\nCONVERSION       : 1 mol/L = 1,000,000 μmol/L`,
-      hints: [
-        "c = A / (ε × l) = 0.84 / 4200 = 0.0002 mol/L.",
-        "Convert 0.0002 mol/L to μmol/L: 0.0002 × 1,000,000 = 200."
-      ]
     },
     {
       id: 10, title: "Forensic Timestamp Skew Cross-Check", difficulty: "medium-hard", character: "A", estimated_minutes: 4,
       prompt: `Forensic audit log #904 shows an export at 21:31 on workstation N-04.\nNTP diagnostics reveal N-04's clock is running exactly 7 minutes FAST (+00:07:00).\n\nWhat was the TRUE wall-clock time of the export? (24-hour HH:MM format)`,
       artifact: `AUDIT_EVENT_LOG #904\nRECORDED_TIME : 21:31:00\nTERMINAL_ID   : WORKSTATION_N-04\nNTP_METRIC    : CLOCK_SKEW_OFFSET = +00:07:00 (FAST)\nCORRECTION    : TRUE_TIME = RECORDED_TIME - CLOCK_SKEW`,
-      hints: [
-        "If the terminal clock is 7 minutes FAST, the real time is 7 minutes EARLIER than what is displayed.",
-        "21:31 minus 7 minutes = 21:24."
-      ]
     },
     {
       id: 11, title: "Memory Allocation Traversal", difficulty: "medium-hard", character: "C", estimated_minutes: 5,
       prompt: `Analyze the linked-node pointer jumps from the archive indexer memory dump:\n\nNode(10) -> Node(30)\nNode(20) -> Node(50)\nNode(30) -> Node(40)\nNode(40) -> Node(20)\nNode(50) -> Node(10)\n\nTraversal starts at Node(10), what is the value at the 4th step?\n(Step 0 = 10, Step 1 = 30, Step 2 = 40, ...)`,
       artifact: `NODE_MAP = {\n  10: 30,\n  20: 50,\n  30: 40,\n  40: 20,\n  50: 10\n}\nSTART = 10`,
-      hints: [
-        "Step 0: 10; Step 1: 30; Step 2: 40.",
-        "Step 3: Node 40 points to 20; Step 4: Node 20 points to 50."
-      ]
     },
     {
       id: 12, title: "Multi-Stage XOR Permutation", difficulty: "hard", character: "E", estimated_minutes: 5,
       prompt: `Secure transmission packet header masked using XOR with key K = 0xAA.\nMasked byte = 0xFE.\n\nCompute original unmasked byte:\nByte = Masked XOR K\nEnter as 2-character hex value.`,
       artifact: `BUFFER_DATA : 0xFE = 1111 1110 (bin)\nXOR_KEY     : 0xAA = 1010 1010 (bin)\nOPERATION   : 11111110 XOR 10101010`,
-      hints: [
-        "Bitwise XOR: 1 XOR 1 = 0; 1 XOR 0 = 1; 0 XOR 0 = 0.",
-        "11111110 XOR 10101010 = 01010100 in binary. Convert 0101 0100 to hex."
-      ]
     },
     {
       id: 13, title: "Doppler Velocity Discrepancy", difficulty: "hard", character: "K", estimated_minutes: 5,
       prompt: `HVAC acoustic Doppler monitor:\nEmitted frequency f₀ = 40,000 Hz, speed of sound c = 340 m/s.\nMeasured frequency shift Δf = +800 Hz.\n\nDoppler formula: Δf ≈ 2·v·f₀/c\nCalculate speed v in m/s.`,
       artifact: `DOPPLER_FORMULA : Δf = (2 * v * f0) / c\nEMITTED_FREQ    : f0 = 40,000 Hz\nSOUND_SPEED     : c = 340 m/s\nSHIFT_MEASURED  : Δf = 800 Hz`,
-      hints: [
-        "Rearrange formula: v = (Δf × c) / (2 × f₀).",
-        "Substitute values: v = (800 × 340) / (2 × 40,000) = 272,000 / 80,000 = 3.4 m/s."
-      ]
     },
     {
       id: 14, title: "Cross-Artefact Registry Hash Match", difficulty: "very-hard", character: "E", estimated_minutes: 6,
       prompt: `Extract A — Token Registry:\n• 'OPS-ALPHA' → MD5: 9a8b7c...\n• 'OPS-BETA'  → MD5: d41d8c...\n• 'OPS-GAMMA' → MD5: 7c2bee...\n• 'OPS-DELTA' → MD5: e2fc71...\n\nExtract B:\nSession token's MD5 hash prefix matched corrupted archive checksum prefix (7c2b).\n\nWhich token was used?`,
       artifact: `EXTRACT_A: TOKEN REGISTRY\n[ID: 101] OPS-ALPHA | HASH: 9a8b7c42\n[ID: 102] OPS-BETA  | HASH: d41d8cd9\n[ID: 103] OPS-GAMMA | HASH: 7c2bee90\n[ID: 104] OPS-DELTA | HASH: e2fc7149\n\nEXTRACT_B: CORRUPTED ARCHIVE ARTIFACT\nFILE_NAME: lantern_raw.csv\nCHECKSUM_PREFIX: 7c2b`,
-      hints: [
-        "Compare the checksum prefix '7c2b' with the hashes listed in Extract A.",
-        "OPS-GAMMA has hash prefix '7c2bee...', exactly matching the 7c2b prefix."
-      ]
     },
     {
       id: 15, title: "Cryptographic Synthesis Check", difficulty: "very-hard", character: "Y", estimated_minutes: 6,
       prompt: `Synthesize three parameters from previous tasks:\n1. P1 = Wavelength from Task 3 (500 nm → 5)\n2. P2 = Modular result from Task 6 (25)\n3. P3 = Hex value from Task 12 to decimal (0x54 = 84)\n\nCompute: Z = (P1 × P2) + P3\nEnter the integer value.`,
       artifact: `SYNTHESIS_EQUATION : Z = (P1 * P2) + P3\nPARAM_1 : 5 (from 500 nm / 100)\nPARAM_2 : 25 (from Task 6 modulo)\nPARAM_3 : 84 (from Task 12 0x54 in dec)`,
-      hints: [
-        "P1 = 5, P2 = 25, P3 = 84.",
-        "Calculate: (5 × 25) = 125. Then 125 + 84 = 209."
-      ]
     }
   ],
 
@@ -471,7 +411,6 @@ FINAL MOTIVE STATEMENT:
 const STATE = {
   soundEnabled: true,
   solvedPuzzles: new Set(),
-  revealedHints: {}, // puzzleId: count
   round2Unlocked: false,
   caseSolved: false,
   participant: null,
@@ -545,7 +484,7 @@ function playSound(type) {
 }
 
 
-// ── Participant API & Local Hint Preferences ──
+// ── Participant API ──
 async function apiRequest(path, options = {}) {
   const response = await fetch(path, {
     ...options,
@@ -571,29 +510,6 @@ function showRegistrationMessage(message, isError = true) {
   messageEl.textContent = message;
   messageEl.classList.toggle('error', isError);
   messageEl.classList.toggle('success', !isError);
-}
-
-function loadProgress() {
-  try {
-    const saved = localStorage.getItem(`aarohan_hints_2026_${STATE.participant?.id || 'guest'}`);
-    if (saved) {
-      const data = JSON.parse(saved);
-      if (data && typeof data.hints === 'object' && data.hints !== null) {
-        STATE.revealedHints = data.hints;
-      }
-    }
-  } catch (e) {
-    console.warn('Could not load saved hint preferences', e);
-  }
-}
-
-function saveProgress() {
-  try {
-    const key = `aarohan_hints_2026_${STATE.participant?.id || 'guest'}`;
-    localStorage.setItem(key, JSON.stringify({ hints: STATE.revealedHints }));
-  } catch (e) {
-    console.warn('Could not save hint preferences', e);
-  }
 }
 
 // ── DOM Initialization ──
@@ -627,7 +543,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   STATE.registrationChecked = true;
-  loadProgress();
   renderRegistrationProfile();
   renderPuzzles();
   renderCodeword();
@@ -770,7 +685,6 @@ function initRegistrationForm() {
       STATE.solvedPuzzles.clear();
       STATE.round2Unlocked = false;
       STATE.caseSolved = false;
-      STATE.revealedHints = {};
       STATE.registrationChecked = true;
       renderRegistrationProfile();
       renderPuzzles();
@@ -994,7 +908,7 @@ function closeSuspectModal() {
 }
 
 
-// ── Render Round 1 Puzzles with Interactive Form & Hints ──
+// ── Render Round 1 Puzzles ──
 function renderPuzzles() {
   const grid = document.getElementById('puzzles-grid');
   if (!grid) return;
@@ -1002,8 +916,6 @@ function renderPuzzles() {
 
   GAME_DATA.puzzles.forEach(puzzle => {
     const isSolved = STATE.solvedPuzzles.has(puzzle.id);
-    const hintsCount = STATE.revealedHints[puzzle.id] || 0;
-
     const card = document.createElement('div');
     card.className = `puzzle-card dynamic-tilt-card reveal${isSolved ? ' solved' : ''}`;
     card.id = `puzzle-card-${puzzle.id}`;
@@ -1038,16 +950,6 @@ function renderPuzzles() {
         </div>
       </div>
 
-      <!-- Hints Section -->
-      <div class="puzzle-hints-section">
-        <button class="btn-hint" id="hint-btn-${puzzle.id}" onclick="revealNextHint(${puzzle.id})">
-          💡 Request Hint (${hintsCount}/2)
-        </button>
-        <div class="hint-box" id="hint-box-${puzzle.id}">
-          ${getRenderedHints(puzzle.id)}
-        </div>
-      </div>
-
       <div class="puzzle-meta">
         <span class="puzzle-time">⏱ ~${puzzle.estimated_minutes} min</span>
         <div class="puzzle-char-slot${isSolved ? ' revealed' : ''}" id="char-slot-${puzzle.id}"
@@ -1062,36 +964,6 @@ function renderPuzzles() {
 
   initUnlockButton();
 }
-
-function getRenderedHints(puzzleId) {
-  const count = STATE.revealedHints[puzzleId] || 0;
-  const puzzle = GAME_DATA.puzzles.find(p => p.id === puzzleId);
-  if (!puzzle || count === 0) return '';
-
-  let html = '';
-  for (let i = 0; i < count; i++) {
-    if (puzzle.hints[i]) {
-      html += `<div class="hint-item"><strong>HINT ${i + 1}:</strong> ${puzzle.hints[i]}</div>`;
-    }
-  }
-  return html;
-}
-
-function revealNextHint(puzzleId) {
-  const current = STATE.revealedHints[puzzleId] || 0;
-  if (current >= 2) return;
-
-  STATE.revealedHints[puzzleId] = current + 1;
-  saveProgress();
-  playSound('click');
-
-  const btn = document.getElementById(`hint-btn-${puzzleId}`);
-  if (btn) btn.textContent = `💡 Request Hint (${STATE.revealedHints[puzzleId]}/2)`;
-
-  const box = document.getElementById(`hint-box-${puzzleId}`);
-  if (box) box.innerHTML = getRenderedHints(puzzleId);
-}
-window.revealNextHint = revealNextHint;
 
 async function checkAnswer(puzzleId) {
   const input = document.getElementById(`input-${puzzleId}`);
@@ -1142,7 +1014,7 @@ async function checkAnswer(puzzleId) {
 
     } else {
       playSound('error');
-      feedback.innerHTML = '<span class="text-red">✗ INCORRECT. Recheck formula or request a hint.</span>';
+      feedback.innerHTML = '<span class="text-red">✗ INCORRECT. Recheck the prompt and try again.</span>';
       input.classList.add('error-shake');
       setTimeout(() => input.classList.remove('error-shake'), 400);
     }
