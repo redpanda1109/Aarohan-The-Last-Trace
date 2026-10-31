@@ -998,6 +998,40 @@ body::before {
   border-top: 1px solid var(--border-color);
 }
 
+.puzzle-score-panel {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  margin-top: 12px;
+  padding: 10px 12px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text-muted);
+}
+
+.puzzle-score-panel strong {
+  flex-basis: 100%;
+  color: var(--amber-400);
+}
+
+.score-counter,
+.score-rules {
+  margin-top: 6px;
+}
+
+.score-counter {
+  color: var(--amber-400);
+  font-family: var(--font-mono);
+  font-weight: 700;
+}
+
+.score-rules {
+  font-size: 0.7rem;
+}
+
 .puzzle-card .puzzle-time {
   font-family: var(--font-mono);
   font-size: 0.72rem;

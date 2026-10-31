@@ -20,17 +20,28 @@ Until the account-ID variable and API-token secret are set, the GitHub deploy jo
 
 ## Participant records
 
-Each participant registers with a team name, grade/class, and school (name is not requested). The registration records the time they accepted the privacy notice. Puzzle attempts (including incorrect attempts), hint use, access-key attempts, and final indictment attempts are saved against a browser session. Each participant can use one hint per puzzle, and their Round 1 page displays their personal hint count out of 15. Progress follows the same browser; clearing its cookies or changing devices loses the session association. Existing registrations retain any name they supplied before the name field was removed; new registrations do not collect a name.
+Each participant registers with a team name, grade/class, and school (name is not requested). The registration records the time they accepted the privacy notice. Puzzle attempts (including incorrect attempts), hint use, access-key attempts, and final indictment attempts are saved against a browser session. Each participant can use one hint per puzzle. A correct answer earns 100 points, and each used hint deducts 30 points, including when its puzzle is not yet solved. Round 1 displays each puzzle's hint status, penalty, and score, plus the total score. Progress follows the same browser; clearing its cookies or changing devices loses the session association. Existing registrations retain any name they supplied before the name field was removed; new registrations do not collect a name.
 
 Only authorized event organizers with access to the Cloudflare account should view participant records. In the Cloudflare dashboard, open **Storage & databases → D1 → `aarohan-final` → Console** to review them:
 
 ```sql
 SELECT id, team_name, grade, school_name, created_at,
        privacy_accepted_at,
-       round2_unlocked, case_solved
+       round2_unlocked, case_solved, total_score
 FROM participants
 ORDER BY created_at DESC;
 ```
+
+For per-question score, solve status, and whether a hint was used:
+
+```sql
+SELECT participant_id, team_name, total_score, puzzle_id,
+       solved, hint_used, penalty, question_score
+FROM participant_puzzle_scores
+ORDER BY team_name, puzzle_id;
+```
+
+The `participants.total_score` column is maintained in D1 as puzzle solves and hints are recorded. The `participant_puzzle_scores` view includes all 15 puzzles per participant; `hint_used` is `1` for yes and `0` for no.
 
 ```sql
 SELECT p.id, p.team_name, p.grade, p.school_name,

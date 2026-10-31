@@ -63,7 +63,7 @@ async function participantFor(request, env) {
   const id = sessionId(request);
   if (!id) return null;
   return env.DB.prepare(
-    "SELECT id, name, team_name, grade, school_name, round2_unlocked, case_solved FROM participants WHERE id = ?",
+    "SELECT id, name, team_name, grade, school_name, round2_unlocked, case_solved, total_score FROM participants WHERE id = ?",
   ).bind(id).first();
 }
 
@@ -146,6 +146,7 @@ async function getState(request, env) {
     },
     solvedPuzzleIds: solved.results.map((row) => row.puzzle_id),
     hintUsedPuzzleIds: hints.results.map((row) => row.puzzle_id),
+    totalScore: result.participant.total_score,
     round2Unlocked: Boolean(result.participant.round2_unlocked),
     caseSolved: Boolean(result.participant.case_solved),
   });
@@ -167,7 +168,14 @@ async function useHint(request, env) {
     "INSERT INTO hint_usage (participant_id, puzzle_id) VALUES (?, ?) ON CONFLICT (participant_id, puzzle_id) DO NOTHING",
   ).bind(result.participant.id, puzzleId).run();
 
-  return json({ used: true, alreadyUsed: insert.meta.changes === 0 });
+  const participant = await env.DB.prepare(
+    "SELECT total_score FROM participants WHERE id = ?",
+  ).bind(result.participant.id).first();
+  return json({
+    used: true,
+    alreadyUsed: insert.meta.changes === 0,
+    totalScore: participant.total_score,
+  });
 }
 
 async function submitPuzzle(request, env) {
@@ -188,7 +196,13 @@ async function submitPuzzle(request, env) {
   const existing = await env.DB.prepare(
     "SELECT 1 FROM puzzle_progress WHERE participant_id = ? AND puzzle_id = ?",
   ).bind(result.participant.id, puzzleId).first();
-  if (existing) return json({ correct: true, alreadySolved: true });
+  if (existing) {
+    return json({
+      correct: true,
+      alreadySolved: true,
+      totalScore: result.participant.total_score,
+    });
+  }
 
   const normalized = normalizeAnswer(body.answer);
   const correct = answers.includes(normalized);
@@ -202,7 +216,10 @@ async function submitPuzzle(request, env) {
     ).bind(result.participant.id, puzzleId).run();
   }
 
-  return json({ correct });
+  const participant = await env.DB.prepare(
+    "SELECT total_score FROM participants WHERE id = ?",
+  ).bind(result.participant.id).first();
+  return json({ correct, totalScore: participant.total_score });
 }
 
 async function unlockRound2(request, env) {

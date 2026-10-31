@@ -457,6 +457,7 @@ const STATE = {
   soundEnabled: true,
   solvedPuzzles: new Set(),
   revealedHints: {}, // puzzleId: 1 when the server has recorded hint use
+  totalScore: 0,
   round2Unlocked: false,
   caseSolved: false,
   participant: null,
@@ -580,6 +581,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     STATE.participant = data.participant;
     STATE.solvedPuzzles = new Set(data.solvedPuzzleIds);
     STATE.revealedHints = Object.fromEntries(data.hintUsedPuzzleIds.map(id => [id, 1]));
+    STATE.totalScore = data.totalScore;
     STATE.round2Unlocked = data.round2Unlocked;
     STATE.caseSolved = data.caseSolved;
   } catch (error) {
@@ -1009,6 +1011,12 @@ function renderPuzzles() {
         </div>
       </div>
 
+      <div class="puzzle-score-panel" id="puzzle-score-${puzzle.id}" aria-live="polite">
+        <span id="hint-status-${puzzle.id}">HINT: ${hintUsed ? 'USED' : 'NOT USED'}</span>
+        <span id="hint-penalty-${puzzle.id}">PENALTY: ${hintUsed ? 30 : 0} POINTS</span>
+        <strong id="question-score-${puzzle.id}">QUESTION SCORE: ${(isSolved ? 100 : 0) - (hintUsed ? 30 : 0)}</strong>
+      </div>
+
       <div class="puzzle-meta">
         <span class="puzzle-time">⏱ ~${puzzle.estimated_minutes} min</span>
         <div class="puzzle-char-slot${isSolved ? ' revealed' : ''}" id="char-slot-${puzzle.id}"
@@ -1046,10 +1054,13 @@ async function revealNextHint(puzzleId) {
     if (!result.used) throw new Error('The hint could not be recorded. Please try again.');
 
     STATE.revealedHints[puzzleId] = 1;
+    STATE.totalScore = result.totalScore;
     if (btn) btn.textContent = '✓ HINT USED (1/1)';
     const box = document.getElementById(`hint-box-${puzzleId}`);
     if (box) box.innerHTML = getRenderedHints(puzzleId);
+    updatePuzzleScoreDisplay(puzzleId);
     updateHintUsageDisplay();
+    updateTotalScoreDisplay();
     playSound('click');
   } catch (error) {
     if (btn) {
@@ -1090,6 +1101,7 @@ async function checkAnswer(puzzleId) {
 
     if (result.correct) {
     STATE.solvedPuzzles.add(puzzleId);
+    STATE.totalScore = result.totalScore;
     playSound('success');
 
     feedback.innerHTML = '<span class="text-green">✓ CORRECT! Character unlocked.</span>';
@@ -1107,6 +1119,7 @@ async function checkAnswer(puzzleId) {
 
     // Reveal character in the codeword banner
     revealCodewordChar(puzzleId - 1, puzzle.character);
+    updatePuzzleScoreDisplay(puzzleId);
     updateProgressDisplay();
 
     } else {
@@ -1160,7 +1173,27 @@ function updateProgressDisplay() {
 
   if (counter) counter.textContent = `${count} / 15 SOLVED`;
   if (bar) bar.style.width = `${(count / 15) * 100}%`;
+  updateTotalScoreDisplay();
   updateHintUsageDisplay();
+}
+
+function updatePuzzleScoreDisplay(puzzleId) {
+  const isSolved = STATE.solvedPuzzles.has(puzzleId);
+  const hintUsed = STATE.revealedHints[puzzleId] === 1;
+  const hintStatus = document.getElementById(`hint-status-${puzzleId}`);
+  const hintPenalty = document.getElementById(`hint-penalty-${puzzleId}`);
+  const questionScore = document.getElementById(`question-score-${puzzleId}`);
+
+  if (hintStatus) hintStatus.textContent = `HINT: ${hintUsed ? 'USED' : 'NOT USED'}`;
+  if (hintPenalty) hintPenalty.textContent = `PENALTY: ${hintUsed ? 30 : 0} POINTS`;
+  if (questionScore) {
+    questionScore.textContent = `QUESTION SCORE: ${(isSolved ? 100 : 0) - (hintUsed ? 30 : 0)}`;
+  }
+}
+
+function updateTotalScoreDisplay() {
+  const score = document.getElementById('total-score');
+  if (score) score.textContent = `TOTAL SCORE: ${STATE.totalScore}`;
 }
 
 function updateHintUsageDisplay() {
