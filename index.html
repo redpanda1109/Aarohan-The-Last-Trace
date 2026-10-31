@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="The Last Trace — Aarohan 2026 | FACE Club Investigation Portal. A two-round forensic investigation challenge at the Asterion Institute.">
+  <meta name="theme-color" content="#0b0d11">
+  <title>The Last Trace — Aarohan 2026 | FACE Club Investigation Portal</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f59e0b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='m4.93 4.93 4.24 4.24'/%3E%3Cpath d='m14.83 9.17 4.24-4.24'/%3E%3Cpath d='m14.83 14.83 4.24 4.24'/%3E%3Cpath d='m9.17 14.83-4.24 4.24'/%3E%3Ccircle cx='12' cy='12' r='4'/%3E%3C/svg%3E">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Scanline Overlay -->
+  <div class="scanline-overlay"></div>
+
+  <!-- ======================== NAVIGATION ======================== -->
+  <nav class="nav-bar" id="navbar">
+    <div class="nav-brand" onclick="showPage('home')" style="cursor:pointer">
+      <div class="brand-icon">⊕</div>
+      <span>The Last Trace</span>
+    </div>
+
+    <ul class="nav-links" id="nav-links">
+      <li><a href="#" data-page="home" class="active">Home</a></li>
+      <li><a href="#" data-page="room">Crime Scene</a></li>
+      <li><a href="#" data-page="suspects">Suspects</a></li>
+      <li><a href="#" data-page="round1">Round 1</a></li>
+      <li><a href="#" data-page="evidence">Evidence</a></li>
+      <li><a href="#" data-page="register">Registration</a></li>
+    </ul>
+
+    <div class="nav-controls">
+      <button class="sound-toggle-btn" id="sound-toggle" title="Toggle audio feedback">
+        <span id="sound-icon">🔊</span>
+      </button>
+      <div class="nav-hamburger" id="nav-hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ======================== HOME PAGE ======================== -->
+  <div class="page active" id="page-home">
+
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-badge">
+        <span class="dot"></span>
+        <span>Case Active — Aarohan 2026 | FACE Club</span>
+      </div>
+      <h1>The Last <span>Trace</span></h1>
+      <p class="hero-subtitle">
+        A forensic digital investigation into the suspicious death of Dr. Adrian John at the Asterion Institute. 
+        Decode the clues, analyze the corrupted archive, and follow the trace that survives cross-checking.
+      </p>
+      <div class="hero-cta">
+        <a href="#" data-page="round1" class="btn btn-primary">▶ Begin Round 1: Code Breaker</a>
+        <a href="#" data-page="room" class="btn btn-outline">🔍 Investigate Crime Scene</a>
+      </div>
+    </section>
+
+    <!-- Case Overview -->
+    <section class="section">
+      <div class="section-header reveal">
+        <span class="section-tag">// Classified Briefing</span>
+        <h2 class="section-title">Case Overview — AJ-2097</h2>
+        <p class="section-desc">Review the official incident briefing and mission scope before commencing forensic analysis.</p>
+      </div>
+
+      <div class="case-overview reveal">
+        <h3>📋 Incident Briefing Report — Asterion Institute</h3>
+        <div id="case-overview-text"></div>
+      </div>
+
+      <!-- Status Bar -->
+      <div class="status-bar reveal">
+        <div class="status-item">
+          <span class="status-dot red"></span>
+          <span>Status: ACTIVE INVESTIGATION</span>
+        </div>
+        <div class="status-item">
+          <span class="status-dot amber"></span>
+          <span>Round 1: 15 Puzzles</span>
+        </div>
+        <div class="status-item">
+          <span class="status-dot green"></span>
+          <span>Evidence Files: 8 Recovered</span>
+        </div>
+        <div class="status-item">
+          <span class="status-dot amber"></span>
+          <span>Suspects: 10 + 1 Victim</span>
+        </div>
+      </div>
+
+      <hr class="separator">
+
+      <!-- Quick Access Cards with Card Dynamics -->
+      <div class="suspects-grid reveal">
+        <div class="evidence-card dynamic-tilt-card" onclick="showPage('room')">
+          <div class="evidence-card-header">
+            <div class="evidence-id">🔍</div>
+            <h3>Crime Scene Room</h3>
+          </div>
+          <div class="evidence-card-body">
+            <p class="evidence-desc">Explore the physical investigation room using interactive image maps. Zoom into the suspects board, case files dossiers, and recovered evidence records.</p>
+          </div>
+          <div class="card-footer-action">Enter Scene →</div>
+        </div>
+
+        <div class="evidence-card dynamic-tilt-card" onclick="showPage('suspects')">
+          <div class="evidence-card-header">
+            <div class="evidence-id">👤</div>
+            <h3>Personnel Dossiers</h3>
+          </div>
+          <div class="evidence-card-body">
+            <p class="evidence-desc">Access 11 personnel files (1 victim, 10 suspects). Filter by department, scrutinize statements, cross-examine alibis, and evaluate investigator notes.</p>
+          </div>
+          <div class="card-footer-action">View Suspects →</div>
+        </div>
+
+        <div class="evidence-card dynamic-tilt-card" onclick="showPage('round1')">
+          <div class="evidence-card-header">
+            <div class="evidence-id">🧩</div>
+            <h3>Round 1: Code Breaker</h3>
+          </div>
+          <div class="evidence-card-body">
+            <p class="evidence-desc">Solve 15 forensic reasoning tasks spanning cryptography, binary analysis, networking, and OSINT to recover the 15-character Archive Access Key.</p>
+          </div>
+          <div class="card-footer-action">Start Puzzles →</div>
+        </div>
+
+        <div class="evidence-card dynamic-tilt-card" onclick="showPage('evidence')">
+          <div class="evidence-card-header">
+            <div class="evidence-id">📂</div>
+            <h3>Round 2: Evidence Vault</h3>
+          </div>
+          <div class="evidence-card-body">
+            <p class="evidence-desc">Inspect 8 forensic evidence artifacts including badge access logs, file checksum mismatches, printer job logs, and submit the final indictment.</p>
+          </div>
+          <div class="card-footer-action">Inspect Vault →</div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ======================== CRIME SCENE ROOM PAGE ======================== -->
+  <div class="page" id="page-room">
+    <section class="room-section">
+      <div class="room-container">
+        <div class="section-header reveal">
+          <span class="section-tag">// Forensic Investigation Room</span>
+          <h2 class="section-title">Crime Scene Analysis</h2>
+          <p class="section-desc">
+            Use the interactive image map below to inspect focal points in the investigation room.
+            Click on highlighted areas or pins to open high-resolution evidence views.
+          </p>
+        </div>
+
+        <!-- Main Interactive Image Map Container -->
+        <div class="room-image-wrapper reveal" id="room-image-wrapper">
+          <img src="Images/Room/Room.png" alt="Investigation Room — Asterion Institute" usemap="#room-map" id="room-image">
+          
+          <!-- Official HTML Image Map with Coordinates for 1536x1024 -->
+          <map name="room-map" id="room-map">
+            <area shape="rect" coords="77,51,921,614" alt="Suspects Board" href="javascript:void(0)" onclick="openLightbox('Images/Room/Suspects.png', 'Suspects Board — Project LANTERN Investigation'); return false;">
+            <area shape="rect" coords="0,635,430,993" alt="Case Files" href="javascript:void(0)" onclick="openLightbox('Images/Room/Case Files.png', 'Case Files — Personnel Dossiers'); return false;">
+            <area shape="rect" coords="460,594,1075,1003" alt="Documents & Evidence" href="javascript:void(0)" onclick="openLightbox('Images/Room/Documents.png', 'Documents & Evidence — Project LANTERN Records'); return false;">
+          </map>
+
+          <!-- Responsive CSS Hotspot Overlay with Pulsing Pins and Labels -->
+          <div id="room-hotspots"></div>
+        </div>
+
+        <div class="room-hint-bar reveal">
+          <span>💡 TIP: Hover over the image to detect active focal points (Suspects Board, Case Files, Evidence Records). Click to inspect in detail.</span>
+        </div>
+
+        <hr class="separator">
+
+        <!-- Room Evidence Gallery with Card Dynamics -->
+        <div class="section-header reveal">
+          <span class="section-tag">// Room Artifact Gallery</span>
+          <h2 class="section-title">High-Resolution Evidence Views</h2>
+          <p class="section-desc">Examine each sector of the crime scene room in high-fidelity forensic resolution.</p>
+        </div>
+
+        <div class="suspects-grid reveal">
+          <div class="suspect-card dynamic-tilt-card" onclick="openLightbox('Images/Room/Room.png', 'Investigation Room — Asterion Institute')">
+            <div class="suspect-card-image" style="height:210px">
+              <img src="Images/Room/Room.png" alt="Investigation Room" loading="lazy">
+              <span class="suspect-tag">Overview</span>
+            </div>
+            <div class="suspect-card-body">
+              <h3>Investigation Room</h3>
+              <div class="suspect-role">Primary Scene Setup</div>
+              <p class="suspect-bio">The central command room featuring the suspect board, evidence table, digital monitoring terminals, and case chronology.</p>
+            </div>
+            <div class="card-footer-action">🔍 Click to Expand</div>
+          </div>
+
+          <div class="suspect-card dynamic-tilt-card" onclick="openLightbox('Images/Room/Suspects.png', 'Suspects Board — Project LANTERN Investigation')">
+            <div class="suspect-card-image" style="height:210px">
+              <img src="Images/Room/Suspects.png" alt="Suspects Board" loading="lazy">
+              <span class="suspect-tag">Personnel Board</span>
+            </div>
+            <div class="suspect-card-body">
+              <h3>Suspects Board</h3>
+              <div class="suspect-role">Project LANTERN Roster</div>
+              <p class="suspect-bio">Direct pinboard showing all ten suspects, Dr. Adrian John's portrait, connection yarn, key timeline notes, and questions.</p>
+            </div>
+            <div class="card-footer-action">🔍 Click to Expand</div>
+          </div>
+
+          <div class="suspect-card dynamic-tilt-card" onclick="openLightbox('Images/Room/Case Files.png', 'Case Files — Personnel Dossiers')">
+            <div class="suspect-card-image" style="height:210px">
+              <img src="Images/Room/Case Files.png" alt="Case Files" loading="lazy">
+              <span class="suspect-tag">Physical Files</span>
+            </div>
+            <div class="suspect-card-body">
+              <h3>Case Files</h3>
+              <div class="suspect-role">Personnel Dossiers</div>
+              <p class="suspect-bio">Forensic dossier binders on the desk with personnel photos, fingerprint charts, security access records, and background notes.</p>
+            </div>
+            <div class="card-footer-action">🔍 Click to Expand</div>
+          </div>
+
+          <div class="suspect-card dynamic-tilt-card" onclick="openLightbox('Images/Room/Documents.png', 'Documents & Evidence — Project LANTERN Records')">
+            <div class="suspect-card-image" style="height:210px">
+              <img src="Images/Room/Documents.png" alt="Documents & Evidence" loading="lazy">
+              <span class="suspect-tag">Audit Documents</span>
+            </div>
+            <div class="suspect-card-body">
+              <h3>Documents & Evidence</h3>
+              <div class="suspect-role">Trial Documentation</div>
+              <p class="suspect-bio">Open file folders showing Project LANTERN clinical trial reports, checksum verification logs, and printer transfer sheets.</p>
+            </div>
+            <div class="card-footer-action">🔍 Click to Expand</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ======================== SUSPECTS PAGE ======================== -->
+  <div class="page" id="page-suspects">
+    <section class="section">
+      <div class="section-header reveal">
+        <span class="section-tag">// Personnel Intelligence</span>
+        <h2 class="section-title">Suspect Profiles & Dossiers</h2>
+        <p class="section-desc">11 individuals tied to Asterion Institute and Case AJ-2097. Filter or search by name. Click any card to inspect full alibi, statement, and investigator notes.</p>
+      </div>
+
+      <!-- Filter & Search Toolbar -->
+      <div class="suspect-toolbar reveal">
+        <div class="filter-buttons" id="suspect-filters">
+          <button class="filter-btn active" data-filter="all">All (11)</button>
+          <button class="filter-btn" data-filter="suspects">Suspects (10)</button>
+          <button class="filter-btn" data-filter="victim">Victim (1)</button>
+        </div>
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="suspect-search" placeholder="Search by name, role, keyword..." autocomplete="off">
+        </div>
+      </div>
+
+      <!-- Suspects Grid with 3D Card Dynamics -->
+      <div class="suspects-grid" id="suspects-grid">
+        <!-- Dynamically populated by JS -->
+      </div>
+    </section>
+  </div>
+
+  <!-- ======================== ROUND 1 PAGE ======================== -->
+  <div class="page" id="page-round1">
+    <section class="section">
+      <div class="section-header reveal">
+        <span class="section-tag">// Round 1 — The Code Breaker</span>
+        <h2 class="section-title">Archive Access Recovery Puzzles</h2>
+        <p class="section-desc">
+          Solve each of the 15 technical tasks to reveal the characters of the 15-letter Archive Access Key.
+          Each puzzle unlocks one character upon entering the correct solution.
+        </p>
+      </div>
+
+      <!-- Codeword Display & Unlock Bar -->
+      <div class="codeword-section reveal">
+        <div class="codeword-header">
+          <div>
+            <h3 class="font-mono text-amber">ARCHIVE ACCESS KEY</h3>
+            <p class="text-muted" style="font-size:0.85rem">Enter answers to the 15 puzzles below to assemble the access key</p>
+          </div>
+          <div class="solve-progress-container">
+            <span class="codeword-progress-badge" id="solve-counter">0 / 15 SOLVED</span>
+            <div class="progress-bar-track">
+              <div class="progress-bar-fill" id="progress-bar-fill"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 15 Character Slots -->
+        <div class="codeword-display" id="codeword-display">
+          <!-- Dynamically populated by JS -->
+        </div>
+
+        <!-- Codeword Unlock Console -->
+        <div class="codeword-unlock-box">
+          <div class="unlock-input-wrap">
+            <input type="text" id="final-code-input" placeholder="ENTER 15-CHAR ACCESS KEY (e.g. THELAST...)" maxlength="20" autocomplete="off" spellcheck="false">
+            <button id="final-unlock-btn" class="btn btn-primary">🔓 UNLOCK CASE ROOM (ROUND 2)</button>
+          </div>
+          <div id="unlock-feedback" class="unlock-feedback"></div>
+        </div>
+      </div>
+
+      <hr class="separator">
+
+      <!-- Puzzles Grid -->
+      <div class="puzzles-grid" id="puzzles-grid">
+        <!-- Dynamically populated by JS with form inputs, hint toggles, and card dynamics -->
+      </div>
+    </section>
+  </div>
+
+  <!-- ======================== EVIDENCE PAGE ======================== -->
+  <div class="page" id="page-evidence">
+    <section class="section">
+      <div class="section-header reveal">
+        <span class="section-tag">// Round 2 — Forensic Case Vault</span>
+        <h2 class="section-title">Forensic Evidence & Indictment</h2>
+        <p class="section-desc">
+          8 verified evidence documents recovered from Asterion Institute. Cross-reference timestamps, badge IDs, checksums, and notes to identify the true culprit and prove the motive.
+        </p>
+      </div>
+
+      <!-- Evidence Grid -->
+      <div class="evidence-grid" id="evidence-grid">
+        <!-- Dynamically populated by JS -->
+      </div>
+
+      <hr class="separator">
+
+      <!-- Final Case Indictment Console -->
+      <div class="indictment-section reveal" id="indictment-section">
+        <div class="indictment-header">
+          <span class="section-tag">// Final Forensic Submission</span>
+          <h2>⚖ Official Case Indictment</h2>
+          <p class="text-muted">
+            Identify the culprit and enter the exact decoded motive phrase to formally solve Case AJ-2097.
+          </p>
+        </div>
+
+        <form class="indictment-form" id="indictment-form" onsubmit="handleIndictmentSubmit(event)">
+          <div class="form-group">
+            <label for="accused-suspect">PRIMARY CULPRIT:</label>
+            <select id="accused-suspect" class="form-select" required>
+              <option value="">-- Select Accused Person --</option>
+              <option value="voss">Dr. Mira Voss — Operations Lead</option>
+              <option value="reed">Noah Reed — Junior Data Analyst</option>
+              <option value="park">Dr. Celia Park — Senior Clinical Researcher</option>
+              <option value="menon">Ravi Menon — Systems Administrator</option>
+              <option value="shaw">Elena Shaw — Ethics & Compliance Officer</option>
+              <option value="bell">Marcus Bell — Security Supervisor</option>
+              <option value="lin">Tessa Lin — Senior Lab Technician</option>
+              <option value="hale">Omar Hale — Finance & Grants Manager</option>
+              <option value="cole">Iris Cole — Journalist-in-Residence</option>
+              <option value="saye">Prof. Victor Saye — External Scientific Adviser</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="motive-input">DECODED MOTIVE PHRASE (FROM E-08):</label>
+            <input type="text" id="motive-input" class="form-input" placeholder="e.g. STOP THE AUDIT..." autocomplete="off" required>
+            <span class="form-tip">Decoded from the foreign-language codebook in Evidence E-08</span>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary" id="btn-submit-indictment">
+              ⚖ SUBMIT OFFICIAL INDICTMENT
+            </button>
+          </div>
+
+          <div id="indictment-feedback" class="indictment-feedback"></div>
+        </form>
+      </div>
+    </section>
+  </div>
+
+  <!-- ======================== PARTICIPANT REGISTRATION PAGE ======================== -->
+  <div class="page" id="page-register">
+    <section class="section registration-section">
+      <div class="section-header">
+        <span class="section-tag">// Aarohan 2026 Participant Entry</span>
+        <h2 class="section-title">Participant Registration</h2>
+        <p class="section-desc">Register individually. Participants on the same team should enter the same team name.</p>
+      </div>
+
+      <form class="registration-form" id="registration-form">
+        <div class="form-group">
+          <label for="registration-name">PARTICIPANT NAME</label>
+          <input class="form-input" id="registration-name" name="name" type="text" maxlength="100" autocomplete="name" required>
+        </div>
+        <div class="form-group">
+          <label for="registration-team">TEAM NAME</label>
+          <input class="form-input" id="registration-team" name="teamName" type="text" maxlength="100" required>
+        </div>
+        <div class="form-group">
+          <label for="registration-grade">GRADE / CLASS</label>
+          <input class="form-input" id="registration-grade" name="grade" type="text" maxlength="100" required>
+        </div>
+        <div class="form-group">
+          <label for="registration-school">SCHOOL NAME</label>
+          <input class="form-input" id="registration-school" name="schoolName" type="text" maxlength="100" autocomplete="organization" required>
+        </div>
+
+        <div class="registration-privacy">
+          <strong>Privacy notice:</strong> Your name, team, grade/class, school, and puzzle and case submissions are stored in the event's Cloudflare database for participation and scoring. Event organizers with database access can view them. This website does not ask for your email or password. If you are under your event's age of consent, get the permission required by your parent/guardian or school before registering. Ask the event organizers about correction or deletion of your record.
+        </div>
+        <label class="registration-consent">
+          <input id="registration-consent" name="privacyAccepted" type="checkbox" required>
+          <span>I have read the notice and have any required parent/guardian or school permission.</span>
+        </label>
+
+        <button class="btn btn-primary" id="registration-submit" type="submit">REGISTER & BEGIN</button>
+        <div class="registration-message" id="registration-message" role="status" aria-live="polite"></div>
+      </form>
+
+      <div class="registration-profile" id="registration-profile" hidden></div>
+    </section>
+  </div>
+
+  <!-- ======================== MODALS & OVERLAYS ======================== -->
+
+  <!-- Lightbox (Room Images) -->
+  <div class="lightbox-overlay" id="lightbox-overlay">
+    <div class="lightbox-content">
+      <button class="lightbox-close" id="lightbox-close" onclick="closeLightbox()">✕</button>
+      <img id="lightbox-image" src="" alt="Evidence Detail">
+      <div class="lightbox-title" id="lightbox-title"></div>
+    </div>
+  </div>
+
+  <!-- Suspect Detail Modal -->
+  <div class="suspect-modal" id="suspect-modal">
+    <div class="suspect-modal-backdrop" onclick="closeSuspectModal()"></div>
+    <div class="suspect-modal-content" id="suspect-modal-inner">
+      <!-- Dynamically populated -->
+    </div>
+  </div>
+
+  <!-- Evidence Detail Modal -->
+  <div class="evidence-modal" id="evidence-modal">
+    <div class="evidence-modal-backdrop" onclick="closeEvidenceModal()"></div>
+    <div class="evidence-modal-content" id="evidence-modal-inner">
+      <!-- Dynamically populated -->
+    </div>
+  </div>
+
+  <!-- Case Solved Celebration Modal -->
+  <div class="case-solved-modal" id="case-solved-modal">
+    <div class="case-solved-backdrop" onclick="closeCaseSolvedModal()"></div>
+    <div class="case-solved-card">
+      <button class="case-solved-close" onclick="closeCaseSolvedModal()">✕</button>
+      <div class="stamp-approved">CASE RESOLVED</div>
+      <div class="solved-icon">🏆</div>
+      <h2>FORENSIC VERIFICATION ACCEPTED</h2>
+      <div class="solved-subtitle">Case AJ-2097 Closed — Asterion Institute Investigation</div>
+      
+      <div class="solved-body">
+        <div class="solved-highlight">
+          <strong>CULPRIT IDENTIFIED:</strong> Dr. Mira Voss (Operations Lead)<br>
+          <strong>MOTIVE CONFIRMED:</strong> STOP THE AUDIT BEFORE THE BOARD MEETS
+        </div>
+        
+        <h4>Chain of Custody & Evidence Breakdown:</h4>
+        <ul class="solved-list">
+          <li><strong>E-03 File Integrity:</strong> Trusted checksum ends in <code>7C2A</code>, but archive copy ends in <code>7C2B</code>. Verification flag was manually altered.</li>
+          <li><strong>E-02 Badge Reader:</strong> Badge <code>M-VOSS</code> entered the restricted corridor at <strong>21:14</strong>, precisely before the 21:17 index modification.</li>
+          <li><strong>E-04 Printer Queue:</strong> Job <code>OPS-MV</code> queued at 21:22 for checklist instructing: <em>"replace source only after checksum warning clears."</em></li>
+          <li><strong>E-07 Operations Ticket:</strong> Ticket <code>OPS-447</code> owned by M. Voss requested suppression of the checksum warning.</li>
+          <li><strong>E-06 False Lead:</strong> Noah Reed's username was planted on workstation N-04 with a 7-minute clock skew and test session token.</li>
+        </ul>
+      </div>
+
+      <div class="solved-footer">
+        <button class="btn btn-primary" onclick="closeCaseSolvedModal()">Close Case File</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ======================== FOOTER ======================== -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-brand">The Last Trace</div>
+      <div class="footer-event">Aarohan 2026 — FACE Club | Asterion Institute Investigation Portal</div>
+      <div class="footer-links">
+        <a href="#" data-page="home">Home</a>
+        <a href="#" data-page="room">Crime Scene</a>
+        <a href="#" data-page="suspects">Suspects</a>
+        <a href="#" data-page="round1">Round 1</a>
+        <a href="#" data-page="evidence">Evidence</a>
+        <a href="#" data-page="register">Registration</a>
+      </div>
+      <div class="footer-copy">© 2026 FACE Club. Built for Aarohan 2026. All forensic materials and personas are fictional.</div>
+    </div>
+  </footer>
+
+
+  <!-- Main Script -->
+  <script src="js/main.js"></script>
+
+</body>
+</html>

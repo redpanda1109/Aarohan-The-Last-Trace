@@ -1,0 +1,14 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "aarohan-final",
+  "compatibility_date": "2026-10-30",
+  "pages_build_output_dir": ".",
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "aarohan-final",
+      "database_id": "bc36a962-1fe7-41f6-a97d-9cea4c4bf658",
+      "migrations_dir": "migrations"
+    }
+  ]
+}
